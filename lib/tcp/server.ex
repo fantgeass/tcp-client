@@ -1,5 +1,12 @@
 defmodule TCP.Server do
-  def start_link(port \\ 5678) do
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]}
+    }
+  end
+
+  def start_link([port: port]) do
     {:ok, _pid} =
       :ranch.start_listener(:tcp_server, :ranch_tcp, [port: port], TCP.Server.Protocol, [])
   end

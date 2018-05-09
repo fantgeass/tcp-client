@@ -1,8 +1,8 @@
 defmodule TCP.Client do
   use Connection
 
-  def start_link(params) do
-    Connection.start_link(__MODULE__, params)
+  def start_link(opts) do
+    Connection.start_link(__MODULE__, opts)
   end
 
   def send(conn, data), do: Connection.call(conn, {:send, data})
