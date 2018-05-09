@@ -7,7 +7,7 @@ defmodule TCP.Server.Supervisor do
 
   def init(_opts) do
     children = [
-      {TCP.Server, [port: 5678]}
+      {TCP.Server, [port: 5678, name: :tcp_server]}
     ]
 
     Supervisor.init(children, [strategy: :one_for_one])

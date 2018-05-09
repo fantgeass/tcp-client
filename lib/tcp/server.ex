@@ -6,9 +6,13 @@ defmodule TCP.Server do
     }
   end
 
-  def start_link([port: port]) do
+  def start_link([port: port, name: name]) do
     {:ok, _pid} =
-      :ranch.start_listener(:tcp_server, :ranch_tcp, [port: port], TCP.Server.Protocol, [])
+      :ranch.start_listener(name, :ranch_tcp, [port: port], TCP.Server.Protocol, [])
+  end
+
+  def stop(name) do
+    :ok = :ranch.stop_listener(name)
   end
 end
 

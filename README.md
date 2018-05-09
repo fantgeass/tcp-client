@@ -12,5 +12,6 @@ This project has 3 dependencies:
 # Getting started
 
 1. Get dependencies ```mix deps.get```
-2. Run console ```iex -S mix```, the app will run supervisors for client and server
-3. Send a message using poolboy ```:poolboy.transaction(:client, &(TCP.Client.send(&1, "Message")), 5000)```
+2. Run tests ```mix test```
+3. Run console ```iex -S mix```, the app will start supervisors for client and server
+4. Send a message using poolboy ```:poolboy.transaction(:client, &(TCP.Client.send(&1, "Message")), 5000)```
