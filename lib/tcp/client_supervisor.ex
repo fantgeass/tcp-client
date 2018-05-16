@@ -5,18 +5,12 @@ defmodule TCP.Client.Supervisor do
     Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  defp poolboy_config do
-    [
-      {:name, {:local, :client}},
-      {:worker_module, TCP.Client},
-      {:size, 5},
-      {:max_overflow, 2}
-    ]
-  end
-
   def init(_opts) do
+    sender_opts = [host: 'localhost', port: 5678, timeout: 5000, retry: 5]
     children = [
-      :poolboy.child_spec(:worker, poolboy_config(), host: 'localhost', port: 5678, timeout: 5000)
+      {TCP.Collector, []},
+      Supervisor.child_spec({TCP.Sender, sender_opts}, id: 1),
+      Supervisor.child_spec({TCP.Sender, sender_opts}, id: 2),
     ]
 
     Supervisor.init(children, [strategy: :one_for_one])

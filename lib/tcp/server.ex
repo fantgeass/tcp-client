@@ -6,11 +6,13 @@ defmodule TCP.Server do
     }
   end
 
+  @spec start_link([port: integer, name: atom]) :: {:ok, pid}
   def start_link([port: port, name: name]) do
     {:ok, _pid} =
       :ranch.start_listener(name, :ranch_tcp, [port: port], TCP.Server.Protocol, [])
   end
 
+  @spec stop(name :: atom) :: :ok
   def stop(name) do
     :ok = :ranch.stop_listener(name)
   end
@@ -19,7 +21,6 @@ end
 defmodule TCP.Server.Protocol do
   @behaviour :ranch_protocol
   @timeout 30000
-  require Logger
 
   def start_link(ref, socket, transport, _opts) do
     pid = spawn_link(__MODULE__, :init, [ref, socket, transport])
@@ -34,12 +35,9 @@ defmodule TCP.Server.Protocol do
 
   defp loop(socket, transport) do
     case transport.recv(socket, 0, @timeout) do
-      {:ok, data} ->
-        Logger.info("RECV DATA: #{data}")
+      {:ok, _data} ->
         loop(socket, transport)
-
-      {:error, reason} ->
-        Logger.info("ERROR: #{reason}")
+      {:error, _reason} ->
         transport.close(socket)
     end
   end
